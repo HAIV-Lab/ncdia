@@ -178,6 +178,40 @@
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#ncdiautils">ncdia.utils</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#ncdiautilsmetrics">ncdia.utils.metrics</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#ncdiautilsmetricsaccuracypy">ncdia.utils.metrics.accuracy.py</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#ncdiautilsmetricsmeterpy">ncdia.utils.metrics.meter.py</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ncdiautilslosses">ncdia.utils.losses</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#crossentropyloss">CrossEntropyLoss</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#angularpenaltysmloss">AngularPenaltySMLoss</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ncdiautilscfgpy">ncdia.utils.cfg.py</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#configs">Configs</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ncdiautilsloggerpy">ncdia.utils.logger.py</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ncdiautilsregistrypy">ncdia.utils.registry.py</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#registry">Registry</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ncdiautilstoolspy">ncdia.utils.tools.py</a>
+    </li>
+        </ul>
     </li>
     </ul>
                   </li>
@@ -1482,6 +1516,161 @@ be popped from <code>default_hooks</code>:</p>
 </tbody>
 </table>
 <h2 id="ncdiautils">ncdia.utils</h2>
+<h3 id="ncdiautilsmetrics">ncdia.utils.metrics</h3>
+<h4 id="ncdiautilsmetricsaccuracypy">ncdia.utils.metrics.accuracy.py</h4>
+<ul>
+<li>
+<p><span class="highlight-text"><strong>accuracy(output, target, topk=(1,))</strong></span></p>
+<p>Computes the accuracy over the k-top predictions for the specified values of k.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>output</strong> (<em>torch.Tensor</em>): model output, shape (batch_size, num_classes)</li>
+<li><strong>target</strong> (<em>torch.Tensor</em>): target labels, shape (batch_size)</li>
+<li><strong>topk</strong> (<em>tuple</em>): top-k values, default is (1,)</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><strong>acc</strong> (<em>list</em>): accuracy values for each k in topk</li>
+</ul>
+</li>
+<li>
+<p><span class="highlight-text"><strong>per_class_accuracy(output, target, topk=(1, ))</strong></span></p>
+<p>Compute per class accuracy over the k-top predictions for the specified values of k </p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>output</strong> (<em>torch.Tensor</em>): model output, shape (batch_size, num_classes)</li>
+<li><strong>target</strong> (<em>torch.Tensor</em>): target labels, shape (batch_size)</li>
+<li><strong>topk</strong> (<em>tuple</em>): top-k values, default is (1,)</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><strong>acc</strong> (<em>list</em>): accuracy values for each k in topk</li>
+</ul>
+</li>
+</ul>
+<h4 id="ncdiautilsmetricsmeterpy">ncdia.utils.metrics.meter.py</h4>
+<p><strong>AverageMeter</strong></p>
+<p>Computes and stores the average and current value.</p>
+<h3 id="ncdiautilslosses">ncdia.utils.losses</h3>
+<h4 id="crossentropyloss">CrossEntropyLoss</h4>
+<p>In <em>crossentropy.py</em>. CrossEntropyLoss with label smoothing.</p>
+<h4 id="angularpenaltysmloss">AngularPenaltySMLoss</h4>
+<p>In <em>angular.py</em>. Angular Penalty Softmax Loss. Three 'loss_types' available: ['arcface', 'sphereface', 'cosface']</p>
+<h3 id="ncdiautilscfgpy">ncdia.utils.cfg.py</h3>
+<h4 id="configs">Configs</h4>
+<p>Include implementation of setup and use of configs.</p>
+<h3 id="ncdiautilsloggerpy">ncdia.utils.logger.py</h3>
+<p>Include implementation of loggers to write output to console and external text file.</p>
+<h3 id="ncdiautilsregistrypy">ncdia.utils.registry.py</h3>
+<h4 id="registry">Registry</h4>
+<p>A registry to map strings to classes or functions.</p>
+<p><strong>Examples:</strong></p>
+<pre><code>&gt;&gt;&gt; REGISTRY = Registry()
+&gt;&gt;&gt; @REGISTRY
+&gt;&gt;&gt; def foo():
+&gt;&gt;&gt;     return 'foo'
+&gt;&gt;&gt; @REGISTRY.register
+&gt;&gt;&gt; def bar():
+&gt;&gt;&gt;     return 'bar'
+
+&gt;&gt;&gt; print(REGISTRY['foo']())
+foo
+&gt;&gt;&gt; print(REGISTRY['bar']())
+bar
+
+&gt;&gt;&gt; print(REGISTRY)
+{'foo': &lt;function foo at 0x7f9b1c0e0d30&gt;, 'bar': &lt;function bar at 0x7f9b1c0e0e18&gt;}
+&gt;&gt;&gt; print(REGISTRY['foo'])
+&lt;function foo at 0x7f9b1c0e0d30&gt;
+&gt;&gt;&gt; print(REGISTRY['bar'])
+&lt;function bar at 0x7f9b1c0e0e18&gt;
+
+&gt;&gt;&gt; print('foo' in REGISTRY)
+True
+&gt;&gt;&gt; print('bar' in REGISTRY)
+True
+&gt;&gt;&gt; print('foobar' in REGISTRY)
+False
+
+&gt;&gt;&gt; print(REGISTRY.keys())
+dict_keys(['foo', 'bar'])
+&gt;&gt;&gt; print(REGISTRY.values())
+dict_values([&lt;function foo at 0x7f9b1c0e0d30&gt;, &lt;function bar at 0x7f9b1c0e0e18&gt;])
+&gt;&gt;&gt; print(REGISTRY.items())
+dict_items([('foo', &lt;function foo at 0x7f9b1c0e0d30&gt;), ('bar', &lt;function bar at 0x7f9b1c0e0e18&gt;)])
+&gt;&gt;&gt; print(len(REGISTRY))
+2
+</code></pre>
+<ul>
+<li>
+<p><span class="highlight-text"><strong>register_callable(self, target: callable)</strong></span></p>
+<p>Register a target.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>target</strong> (<em>callable</em>): callable target to be registered.</li>
+</ul>
+</li>
+<li>
+<p><span class="highlight-text"><strong>register_dict(self, target)</strong></span></p>
+<p>Register a dict.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>target</strong> (<em>dict</em>): A dict to be registered. All its values should be callable.</li>
+</ul>
+</li>
+<li>
+<p><span class="highlight-text"><strong>register(self, target)</strong></span></p>
+<p>Register a target.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>target</strong> (<em>callable | dict</em>): target to be registered.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><strong>target</strong> (<em>object</em>): Registered target.</li>
+</ul>
+</li>
+<li>
+<p><span class="highlight-text"><strong>build(self, target: dict | Configs, **kwargs)</strong></span></p>
+<p>Build a target with configs.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>target</strong> (<em>dict | Configs</em>): A dict to be built. It should have a key 'type' to specify the target type. It may have other keys to specify the target configs.</li>
+<li><strong>kwargs</strong> (<em>dict</em>): Additional keyword arguments.</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ul>
+<li><strong>target</strong> (<em>object</em>): A built target.</li>
+</ul>
+</li>
+</ul>
+<h3 id="ncdiautilstoolspy">ncdia.utils.tools.py</h3>
+<ul>
+<li>
+<p><span class="highlight-text"><strong>mkdir_if_missing(dirname)</strong></span></p>
+<p>Create dirname if it is missing.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>dirname</strong> (<em>str</em>): directory path</li>
+</ul>
+</li>
+<li>
+<p><span class="highlight-text"><strong>auto_device(device)</strong></span></p>
+<p>Automatically set the device for the input tensor.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>device</strong> (<em>str | torch.device | None</em>): device name or device object. If None, return torch.device('cuda') if available, otherwise return torch.device('cpu').</li>
+</ul>
+</li>
+<li>
+<p><span class="highlight-text"><strong>set_random_seed(seed)</strong></span></p>
+<p>Set random seed for reproducibility.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>seed</strong> (<em>int</em>): random seed</li>
+</ul>
+</li>
+</ul>
               
             </div>
           </div><footer>
